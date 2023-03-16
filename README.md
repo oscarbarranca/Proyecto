@@ -1,2 +1,2 @@
 # Econometria-portafolio
-Aquí irá el código del portafolio de econometría 
+Regresión lineal simple para la explicación del precio de auto respecto el tamaño de el motor
