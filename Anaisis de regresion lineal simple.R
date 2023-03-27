@@ -30,13 +30,13 @@ raw_df <- read.csv("scrap price.csv")
 ## Como es un modelo de regresión lineal simple, usamos una variable que sea numérica en vez de una variable
 ## caracter, ya que [Poner explicación]
 
-## 1.- hacemos la limpieza de datos necesaria para que sólo queden variables numéricas
+#### 1.- hacemos la limpieza de datos necesaria para que sólo queden variables numéricas ####
 
 numeric_df <- raw_df %>% 
   dplyr::select(wheelbase, carlength, carwidth, carheight, curbweight, enginesize, boreratio, stroke, compressionratio,
                 horsepower, peakrpm, citympg, highwaympg,carbody, price)
 
-## 2.- Dividimos la info en intervalos
+#### 2.- Dividimos la info en intervalos ####
 
 first_set <- numeric_df %>% 
   ggpairs(columns = c(1:4, 15), aes(color = carbody, alpha = .5)) + 

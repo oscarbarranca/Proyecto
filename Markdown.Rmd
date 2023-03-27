@@ -24,20 +24,37 @@ mainfont: Bookman Old Style
 \rhead{\includegraphics[height=1cm]{`r here::here('ITAM.png')`}}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(fig.align = 'center')
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(verbose = FALSE)
+options(tinytex.verbose = TRUE)
+
+library(tidyverse)
+library(MASS)
+library(GGally)
+library(fBasics)
+
 ```
 
 # R Markdown
 
+test
 
-```{r cars}
-summary(cars)
+
+```{r}
+
+
 ```
 
 # Including Plots
 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r pressure}
+
+
+
 ```
 
