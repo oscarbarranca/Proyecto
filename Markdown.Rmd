@@ -30,31 +30,260 @@ knitr::opts_chunk$set(fig.align = 'center')
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(verbose = FALSE)
+knitr::opts_chunk$set(fig.width=12, fig.height=8) 
 options(tinytex.verbose = TRUE)
 
 library(tidyverse)
 library(MASS)
 library(GGally)
 library(fBasics)
+library(knitr)
+library(broom)
+
+raw_df <- read.csv("scrap price.csv")
+
+set.seed(3234)
 
 ```
 
-# R Markdown
+# Introducción 
 
-test
+## Breve explicación de la base de datos "Scrap price"
 
 
-```{r}
+\pagebreak
+\newpage
+
+# Selección de la variable explicativa
+
+Para la selección de la variable explicativa eliminamos las variables de caracter, y dejamos las variables numéricas. Dividimos las variables en 3 grupos para poder analizar la correlación de las variables respecto el precio:
+
+
+
+```{r Ggpairs}
+
+numeric_df <- raw_df %>% 
+  dplyr::select(wheelbase, carlength, carwidth, carheight, curbweight, enginesize, boreratio, stroke, compressionratio,
+                horsepower, peakrpm, citympg, highwaympg,carbody, price)
+
+first_set <- numeric_df %>% 
+  ggpairs(columns = c(1:4, 15), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 4.5))) + 
+  ggtitle("First set") + 
+  theme(axis.text = element_text(size = 10))
+
+second_set <- numeric_df %>% 
+  ggpairs(columns = c(5:9, 15), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 4.5))) +
+  ggtitle("Second set") + 
+  theme(axis.text = element_text(size = 10))
+
+third_set <- numeric_df %>% 
+  ggpairs(columns = c(10:13, 15), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 4.5))) +
+  ggtitle("Third set") + 
+  theme(axis.text = element_text(size = 10))
+
+print(first_set)
+print(second_set)
+print(third_set)
+
 
 
 ```
 
-# Including Plots
+Cómo se puede observar las variables con las correlaciones más altas son: 
+
+Horsepower, curbweight, enginesize con 0.808, 0.835 y 0.874 respectivamente. No obstante, la variable que más sentido hace para elegir para explicar el motor es "enginesize", ya que además de tener la correlación más alta respecto al precio, podemos eliminar "horse power" porque tiene una multicolienalidad imperfecta de 0.810 con la variable que elegimos.
+
+```{r Horsepower^Enginesize}
+
+hp_eng.size <- numeric_df %>% 
+  ggpairs(columns = c(6,10), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 4.5))) +
+  ggtitle("HP_Eng") + 
+  theme(axis.text = element_text(size = 10))
+
+print(hp_eng.size)
+```
+\pagebreak
+\newpage
+
+# Modelo de regresión lineal simple
+
+## Parámetros del modelo 
+
+```{r MRLS, comment = ""}
+
+train.base <- raw_df %>% 
+  sample_frac(.70)
+
+val.base <- raw_df %>% 
+  setdiff(train.base)
 
 
-```{r pressure}
+modelo_1 <- lm(price~enginesize, data = train.base)
+
+summary(modelo_1)
+
+```
+Podemos observar que para B0 y B1 el P value < |t value | por lo tanto B0 y B1 son significativas con un nivel de confianza de 1
 
 
+Tabla ANOVA 
+
+```{r ANOVA, comment = ""}
+
+anova(modelo_1)
+
+```
+\pagebreak
+\newpage
+
+## Análisis de residuales
+
+### Comprobación de la linealidad de la Fn de regresión
+
+Comprobamos con la R^2, en este caso los errores se acercan un 77% a nuestra recta de regresión
+lo que nos dice que sí hay linealidad en ella, lo comprobamos sacando la R^2
+
+nos da el .7787968 de R^2
+
+### Heterocedasticidad 
+
+Comprobamos heterocedisticidad (la varianza de los errores es constante), lo comprobamos con un gráfico comparando los residuales con las Y observadas (ŷ), para esto tenemos que hacer un DF con ambos vectores obtenidos de nuestro modelo
+
+```{r heterocedasticidad}
+prueba_heter <- as.data.frame(cbind(modelo_1$fitted.values, modelo_1$residuals))
+
+# cambiamos el nombre de nuestras columnas para una mayor facilidad de lectura 
+
+colnames(prueba_heter) <- c("Y_observada", "Residuales")
+
+# Graficamos para observar si hay un patrón o no respecto ambas variables
+
+grafico_heter <- prueba_heter %>% 
+  ggplot() + 
+  geom_point(aes(Y_observada, Residuales)) + 
+  theme_classic()
+
+grafico_heter
+  
+
+```
+
+Se puede observar que no hay un patrón en sí en el gráfico, como una recta, con esto podemos asumir que hay heterocedisticidad.
+
+### Independencia en los errores 
+
+No es una serie de tiempo - no aplica ya que los datos no llevan un orden y pueden cambiar de pocisión 
+\pagebreak
+\newpage
+
+### Presencia de errores atípicos 
+
+Esto se hace calculando la raíz de el cuadrado medio de la suma de cuadrados de los errores (MSE), el cual se obtiene de la tabala ANOVA de nuestros residuales el mean.
+
+Ya con MSE^(1/2), podemos sacar la división de los residuales entre la raíz de MSE y compararlos con xi esas variables las metemos en un DF y graficamos las diferencias.
+
+```{r Independencia de errores}
+
+## Esto se hace calculando la raíz de el cuadrado medio de la suma de cuadrados de los errores (MSE)
+## El cual se obtiene de la tabala ANOVA de nuestros residuales el mean 
+
+anova_1 <- anova(modelo_1)
+sqrt_mse <- sqrt(anova_1[2,3])
+
+## Ya con MSE^(1/2), podemos sacar la división de los residuales entre la raíz de MSE y compararlos con xi
+## Esas variables las metemos en un DF 
+
+df_ea <- as.data.frame(cbind(train.base$enginesize, modelo_1$residuals/sqrt_mse))
+
+colnames(df_ea) <- c("X", "Errores")
+
+# Graficamos esas diferencias
+
+grafico_ea <- df_ea %>% 
+  ggplot() + 
+  geom_line(aes(x = X, y = -4),col = "Red", alpha=.5) +
+  geom_line(aes(x = X, y = 4), col = "Red", alpha=.5) +
+  geom_point(aes(x = X, y = Errores)) + 
+  ggtitle("x vs ui / raiz(mse)") +
+  ylab("ui / raiz(mse)") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+grafico_ea
+
+```
+
+\pagebreak
+\newpage
+
+### Verificar la normalidad en los errores 
+
+La QQ plot - esa se hace con los residuales sacamos los residuales de nuestro modelo
+
+```{r QQ Plot}
+
+ui <- as.data.frame(modelo_1$residuals)
+colnames(ui) <- c("Ui")
+
+ui %>% 
+  ggplot(aes(sample = Ui)) + 
+  stat_qq() +
+  stat_qq_line() + 
+  ggtitle("QQ Plot Residuales") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+```
+
+Rechazamos el supuesto de normalidad de los errores debido a las dos colas que muestra el gráfico de QQ plot. No obstante, ya que el modelo de regresión lineal simple ajustado es robusto ante el supuesto de normalidad podemos continuar usando esta variable explicativa.
+
+
+\pagebreak
+\newpage
+
+## Intervalo de confianza y predicción al 95%
+
+Sacamos el intervalo de confianza de E[Y], esto lo hacemos para ver el intervalo en donde van a estar las siguientes E[Y / X], independientemente de la muestra.
+
+En R usamos la fn Predict.lm la alimentamos con el modelo_1 con nuestra data de entrenamiento aplicando el intervalo de confianza a el nivel requerido, en este caso .95 [Explicar porque]
+
+```{r Confianza y predicción}
+
+confianza <- as.data.frame(predict.lm(modelo_1, train.base, interval = "confidence", level = .95))
+
+colnames(confianza) <- c("Y_Observada", "lwr", "upr")
+
+# también hacemos la predicción para poder obtener ambos intervalos, los de confianza y los de predicción
+
+prediccion <- as.data.frame(predict.lm(modelo_1, train.base, interval = "prediction", level = .95))
+
+colnames(prediccion) <- c("Y_Observada_predecida", "lwr_pred", "upr_pred")
+
+# Ya nos da un Df con la info de nuestra
+# confianza y la predicción 
+
+train.base.confianza.prediccion <- as.data.frame(c(train.base, confianza, prediccion))
+
+
+grafico_confianza_prediccion <- train.base.confianza.prediccion %>% 
+  ggplot() + 
+  geom_point(aes(x = enginesize, y = price)) + 
+  # Agregamos los intervalos de confianza y de predicción 
+  geom_line(aes(x = enginesize, y = lwr), color = "red", linetype = "dashed") + 
+  geom_line(aes(x = enginesize, y = upr), color = "red", linetype = "dashed") +
+  geom_line(aes(x = enginesize, y = lwr_pred), color = "purple", linetype = "dashed") +
+  geom_line(aes(x = enginesize, y = upr_pred), color = "purple", linetype = "dashed") +
+  # Agregamos las rectas de E[Y / X]
+  geom_line(aes(x = enginesize, y = Y_Observada), color = "blue") +
+  #Agregamos la recta de Y predecida
+  geom_line(aes(x = enginesize, y = Y_Observada_predecida), color = "black", linetype = "dashed") +
+  ggtitle("Intervalo de predicción y confianza al 95%")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+grafico_confianza_prediccion
 
 ```
 

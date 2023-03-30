@@ -21,7 +21,7 @@ raw_df <- read.csv("scrap price.csv")
 
 
 
-##Se inicia análisis exploratorio de datos##
+#### Se inicia análisis exploratorio de datos ####
 
 ## Para poder hacer un análisis en donde se entiendan los datos y podamos saber que variables podemos usar 
 ## vamos a dividir la información en un intervalo de 6 (incluyendo siempre el precio) para ver la relación
@@ -47,8 +47,17 @@ second_set <- numeric_df %>%
   ggtitle("Second set")
 
 third_set <- numeric_df %>% 
-  ggpairs(columns = c(10:13, 15), aes(color = carbody, alpha = .5)) +
-  ggtitle("Third set")
+  ggpairs(columns = c(10:13, 15), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 2))) +
+  ggtitle("Third set") + 
+  theme(axis.text = element_text(size = 2))
+
+
+third_set <- numeric_df %>% 
+  ggpairs(columns = c(6,10), aes(color = carbody, alpha = .5), upper = list(continuous = wrap("cor", size = 2))) +
+  ggtitle("Third set") + 
+  theme(axis.text = element_text(size = 2))
+
+third_set
 
 ## Vamos a utilizar la variable X = enginesize ya que lógicamente se puede entender que haya una relación
 ## positiva respecto al tamaño del motor y el precio
@@ -223,7 +232,7 @@ grafico_confianza_prediccion <- plotly::ggplotly(grafico_confianza_prediccion)
 grafico_confianza_prediccion
 
 
-#-------------------- validación ---------------------#
+####  validación  ####
 ## Aquí termina nuestro entrenamiento del modelo ∴ vamos a usar nuestras betas entrenadas en la población 
 ## del 30%, y las diferentes muestras deben entrar en nuestros intervalos o sea validar nuestro modelo 
 
