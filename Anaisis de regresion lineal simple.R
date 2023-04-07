@@ -11,7 +11,7 @@ library(fBasics)
 rm(list=ls())
 
 
-## Colocamos la semilla
+## Fijamos nuestra muestra
 
 set.seed(3234)
 
@@ -133,7 +133,7 @@ plotly::ggplotly(grafico_heter) # (Sólo se hace para hacer el gráfico interact
 
 # 3) Independencia en los errores 
 
-# No es una serie de tiempo - no aplica
+# No es una serie de tiempo - no aplica 
 
 # 4) Presencia de errores atípicos  
 
