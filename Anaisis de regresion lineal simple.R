@@ -20,7 +20,6 @@ set.seed(3234)
 raw_df <- read.csv("scrap price.csv")
 
 
-
 #### Se inicia análisis exploratorio de datos ####
 
 ## Para poder hacer un análisis en donde se entiendan los datos y podamos saber que variables podemos usar 
