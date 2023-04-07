@@ -52,7 +52,7 @@ set.seed(3234)
 
 ## Problema de interés: Análisis del precio de los vehículos 
 
-### Breve explicación de la base de datos "Scrap price"
+### Breve explicación de la base de datos "Scrap price" [Raúl]
 
 ## ¿Por qué usar una regresión lineal?
 
