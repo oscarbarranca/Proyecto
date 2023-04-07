@@ -25,6 +25,8 @@ mainfont: Bookman Old Style
 
 ```{r setup, include=FALSE}
 
+#Descargar el packete here en caso de que el archivo no knitee
+
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.align = 'center')
 knitr::opts_chunk$set(message = FALSE)
@@ -280,7 +282,7 @@ grafico_confianza_prediccion <- train.base.confianza.prediccion %>%
   #Agregamos la recta de Y predecida
   geom_line(aes(x = enginesize, y = Y_Observada_predecida), color = "black", linetype = "dashed") +
   ggtitle("Intervalo de predicción y confianza al 95%")+
-  theme_minimal()+
+  theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
 grafico_confianza_prediccion
