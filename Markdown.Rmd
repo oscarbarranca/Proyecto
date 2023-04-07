@@ -50,7 +50,7 @@ set.seed(3234)
 
 # Introducción 
 
-## Problema de interés: Análisis del precio de los vehículos 
+## Problema de interés: Análisis del precio de los vehículos [Raúl]
 
 ### Breve explicación de la base de datos "Scrap price" [Raúl]
 
