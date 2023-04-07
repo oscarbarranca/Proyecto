@@ -273,7 +273,7 @@ Rechazamos el supuesto de normalidad de los errores debido a las dos colas que m
 
 Sacamos el intervalo de confianza de E[Y], esto lo hacemos para ver el intervalo en donde van a estar las siguientes E[Y / X], independientemente de la muestra.
 
-En R usamos la fn Predict.lm la alimentamos con el modelo_1 con nuestra data de entrenamiento aplicando el intervalo de confianza a el nivel requerido, en este caso .95 [Explicar porque]
+En R usamos la fn Predict.lm la alimentamos con el modelo_1 con nuestra data de entrenamiento aplicando el intervalo de confianza a el nivel requerido, en este caso .95 [Explicar porque (AOKI)]
 
 ```{r Confianza y predicción}
 
