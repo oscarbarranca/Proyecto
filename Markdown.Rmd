@@ -61,7 +61,7 @@ set.seed(3234)
 \pagebreak
 \newpage
 
-# Marco teórico
+# Marco teórico [AOKI]
 
 ## Conceptos básicos
 
