@@ -50,13 +50,37 @@ set.seed(3234)
 
 # Introducción 
 
-## Breve explicación de la base de datos "Scrap price"
+## Problema de interés: Análisis del precio de los vehículos 
+
+### Breve explicación de la base de datos "Scrap price"
+
+## ¿Por qué usar una regresión lineal?
+
 
 
 \pagebreak
 \newpage
 
-# Selección de la variable explicativa
+# Marco teórico
+
+## Conceptos básicos
+
+## Supuestos del modelo 
+
+## Método de selección de variables y limitaciones del modelo
+
+
+\pagebreak
+\newpage
+
+# Análisis exploratorio de datos
+
+## Análisis de la base de datos
+
+Aquí va filtros aplicados, estadígrafos, gráficas, limpieza y selección de variable depen-
+diente con justificación
+
+## Selección de la variable explicativa
 
 Para la selección de la variable explicativa eliminamos las variables de caracter, y dejamos las variables numéricas. Dividimos las variables en 3 grupos para poder analizar la correlación de las variables respecto el precio:
 
