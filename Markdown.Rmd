@@ -54,7 +54,7 @@ set.seed(3234)
 
 ### Breve explicación de la base de datos "Scrap price"
 
-## ¿Por qué usar una regresión lineal?
+## ¿Por qué usar una regresión lineal? [Raúl]
 
 
 
