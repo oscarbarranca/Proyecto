@@ -80,7 +80,7 @@ set.seed(3234)
 Aquí va filtros aplicados, estadígrafos, gráficas, limpieza y selección de variable depen-
 diente con justificación
 
-## Selección de la variable explicativa
+## Selección de la variable explicativa 
 
 Para la selección de la variable explicativa eliminamos las variables de caracter, y dejamos las variables numéricas. Dividimos las variables en 3 grupos para poder analizar la correlación de las variables respecto el precio:
 

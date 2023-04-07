@@ -11,7 +11,7 @@ library(fBasics)
 rm(list=ls())
 
 
-## Fijamos nuestra muestra
+## Fijamos nuestra muestra para poder tener un control sobre nuestros resultados
 
 set.seed(3234)
 
