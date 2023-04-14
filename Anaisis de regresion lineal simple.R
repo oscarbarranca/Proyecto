@@ -115,13 +115,13 @@ prueba_heter <- as.data.frame(cbind(modelo_1$fitted.values, modelo_1$residuals))
 
 # cambiamos el nombre de nuestras columnas para una mayor facilidad de lectura 
 
-colnames(prueba_heter) <- c("Y_observada", "Residuales")
+colnames(prueba_heter) <- c("Y_estimada", "Residuales")
 
 # Graficamos para observar si hay un patrón o no respecto ambas variables
 
 grafico_heter <- prueba_heter %>% 
   ggplot() + 
-  geom_point(aes(Y_observada, Residuales)) + 
+  geom_point(aes(Y_estimada, Residuales)) + 
   theme_classic()
   
 
@@ -194,13 +194,13 @@ ui %>%
 
 confianza <- as.data.frame(predict.lm(modelo_1, train.base, interval = "confidence", level = .95))
 
-colnames(confianza) <- c("Y_Observada", "lwr", "upr")
+colnames(confianza) <- c("Y_Estimada", "lwr", "upr")
 
 # también hacemos la predicción para poder obtener ambos intervalos, los de confianza y los de predicción
 
 prediccion <- as.data.frame(predict.lm(modelo_1, train.base, interval = "prediction", level = .95))
 
-colnames(prediccion) <- c("Y_Observada_predecida", "lwr_pred", "upr_pred")
+colnames(prediccion) <- c("Y_Estimada_pred", "lwr_pred", "upr_pred")
 
 # Ya nos da un Df con la info de nuestra
 # confianza y la predicción 
@@ -217,10 +217,10 @@ grafico_confianza_prediccion <- train.base.confianza.prediccion %>%
   geom_line(aes(x = enginesize, y = lwr_pred), color = "purple", linetype = "dashed") +
   geom_line(aes(x = enginesize, y = upr_pred), color = "purple", linetype = "dashed") +
   # Agregamos las rectas de E[Y / X]
-  geom_line(aes(x = enginesize, y = Y_Observada), color = "blue") +
+  geom_line(aes(x = enginesize, y = Y_Estimada), color = "blue") +
   #Agregamos la recta de Y predecida
-  geom_line(aes(x = enginesize, y = Y_Observada_predecida), color = "black", linetype = "dashed") +
-  ggtitle("Intervalo de predicción y confianza al 95%")+
+  geom_line(aes(x = enginesize, y = Y_Estimada_pred), color = "black", linetype = "dashed") +
+  labs(title = "Intervalo de predicción y confianza al 95%", subtitle = "Entrenamiento") +
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5))
   
@@ -260,7 +260,7 @@ grafico_confianza_prediccion_validacion <- validacion.base.confianza.prediccion 
   geom_line(aes(x = enginesize, y = y_gorro), color = "blue") +
   #Agregamos la recta de Y predecida
   geom_line(aes(x = enginesize, y = y_gorro_pred), color = "black", linetype = "dashed") +
-  ggtitle("Intervalo de predicción y confianza al 95%")+
+  labs(title = "Intervalo de predicción y confianza al 95%", subtitle = "Validación") +
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5))
 
