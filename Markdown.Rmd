@@ -84,6 +84,7 @@ diente con justificación
 
 Para la selección de la variable explicativa eliminamos las variables de caracter, y dejamos las variables numéricas. Dividimos las variables en 3 grupos para poder analizar la correlación de las variables respecto el precio:
 
+
 \pagebreak
 \newpage
 
@@ -91,7 +92,9 @@ Para la selección de la variable explicativa eliminamos las variables de caract
 
 ## ¿Qué significan los coeficientes?
 
+
 ## Análisis de los coeficientes obtenidos
+
 
 \pagebreak
 \newpage
